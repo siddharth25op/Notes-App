@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">  
+    <title>Uzumaki Notes App</title>
+    <link rel="stylesheet" href="css/notes.css">
+    <link rel="icon" type="image/x-icon" href="css/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <% if(notes == 0){ %>
+        <h1 style="color: purple; text-align: center;">Click add button to add notes.</h1>    
+    <% } %>
+    <div id="popupForm">
+        <form action="/submit" method="post">
+            <h2>New note</h2>
+            <label for="name">Title:</label>
+            <input type="text" id="name" name="title" required>
+
+            <label for="message">Content:</label>
+            <textarea id="message" style="height: 140px;" name="content" required></textarea>
+
+            <button class="button-30" type="submit" role="button">Save</button>
+            <button class="button-30" type="button" id="closeFormBtn">Close</button>
+        </form>
+    </div>
+    
+    <div id="profileForm">
+        <h2><%= name %></h2>
+        <p style="text-align: center;"><%= username %></p>
+        <a href="/logout" ><button class="button-30" role="button">Logout</button></a>
+        <button class="button-30" type="button" id="closeProfileFormBtn">Close</button>
+    </div>
+
+    <div class="wrapper">
+        <% for (const note of notes) { %>
+            <form action="/edit-delete" method="post" class="note-form">
+                <li class="note">
+                    <div class="details">
+                        <p><input class="titl" name="title" value="<%= note.title %>"></p>
+                        <hr>
+                        <input type="hidden" name="noteId" value="<%= note.id %>">
+                        <textarea class="cont" name="content" required><%= note.content %></textarea>
+                    </div>
+                    <div class="bottom-content">
+                        <button class="button-30" type="submit" role="button">Save</button>
+                        <button style="color: red;" class="button-30 delete-button" type="button" onclick="confirmDelete(this)">Delete</button>
+                    </div>
+                </li>
+            </form>
+        <% } %>
+    </div>
+    
+    <script>
+        function confirmDelete(deleteButton) {
+            if (confirm("Are you sure you want to delete this note?")) {
+                const form = deleteButton.closest('.note-form');
+                form.insertAdjacentHTML('beforeend', '<input type="hidden" name="delete" value="true">');
+                form.submit();
+            }
+        }
+    </script>
+
+    <% if(profilePic){ %>
+            <a href="#" id="profileBtn"><img class="pro" src="<%= profilePic %>"></a>
+      <% }else if(avatar){ %>
+            <a href="#" id="profileBtn"><img class="pro" src="https://cdn.discordapp.com/avatars/<%= discordId %>/<%= avatar %>"></a>
+      <% }else{ %>
+            <a href="#" id="profileBtn"><img class="pro" src="https://cdn.glitch.global/15863646-2f8c-477d-9644-3c762403e89d/pp.png"></a>
+        <% } %>
+    <button id="openFormBtn" class="button-30" type="submit" role="button">➕</button>
+    <script src="css/notes.js"></script>
+    
+  </body>
+</html>
